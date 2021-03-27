@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<title>JSON Demo</title>
+	<meta charset="utf-8"/>
+	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" 
+	crossorigin="anonymous"></script>
+	<script>
+		function ValidatePhone(phNumber) {
+			$("#valid").text("Loading ...");
+			request = new XMLHttpRequest();
+			request.open("GET", "https://phonevalidation.abstractapi.com/v1?api_key=44e8789a5a9b41f9b6826c41dcd1927e&phone="+phNumber, true);
+			request.onreadystatechange = function() {
+			
+				if (request.readyState == 4 && request.status == 200) {
+					theData = request.responseText;
+					data = JSON.parse(theData);
+					returnHTML = JSON.stringify(data);
+					document.getElementById("valid").innerHTML =returnHTML;
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+					document.getElementById("valid").innerHTML = "Whoops, something went terribly wrong!";
+
+				}
+				else if (request.readyState == 3) {
+					document.getElementById("valid").innerHTML = "Come back soon!";
+				}
+
+			}
+			request.send();
+		}
+
+		$(document).ready(function(){
+    		$(":button").click(function(){
+        		if($("#phone").val() == "") {
+            		$("#valid").text("Please enter a phone number");
+        		} else {
+           			ValidatePhone($("#phone").val());
+        		}
+    		});
+		});
+	</script>
+</head>
+
+
+
+<body>
+	<p style="width:60%">Enter an phone number: <input type="number" id="phone">&nbsp<button>Check Validity & Source</button></p>
+    <br>
+    <p id="valid"></p>
+      <div>
+         <h2>Phone Number Validatoin API</h2>
+         <p>This is a phone number validation API that I got from Abstract APIs. It takes a phone number and tells the user if the phone number is valid or invalid. if it is valid then it returns the country code, country ID and country and phone carrier details corresponding to that number. This API is just a parsing tool which probably cross-references the phone number with a data base. I tried my indian nunber on it and it works correctly so it seems trustable</p>
+         <br>
+         <p>This API would be helpful in the case of someone filling a contact form. It will check if the phone numebr given by the user is valid or no. This is important as if the user enters an invalid number then the frim will not be able to contact the user</p>
+         <br>
+         <p>Another eample is if the user is ordering a service and needs to be contacted via phone for the service. This API will ensure that the number is valid and also give information of which dialing code the service company should use in order to reach the user/customer</p>
+         <br>
+         <p>This API is available on https://app.abstractapi.com/</a>. I found it on google throught public github hostings. The API is fetched using a GET request and providing a number through the query in the URL.</p>
+         <br>
+</body>
+</html>
